@@ -1,0 +1,9 @@
+__pycache__/
+.ipynb_checkpoints/
+
+data/**
+!data/**/
+!data/**/.gitkeep
+
+notebooks/html/*
+!notebooks/html/.gitkeep

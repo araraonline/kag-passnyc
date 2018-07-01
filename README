@@ -1,0 +1,26 @@
+Project structure:
+
+.
+├── data
+│   ├── raw                   raw data (ready or not ready to analyse)
+│   ├── pre                   preprocessed data (ready to analyse)
+│   ├── process               processed data
+│   ├── interim               data used in intermediate processes
+│   ├── external              data from external sources
+│   └── flags                 empty files used to control Make
+│
+├── src                       source code root
+│   └── data
+│       ├── raw               code here will generate data that goes into './data/raw/'
+│       ├── pre
+│       ├── process
+│       └── interim
+│
+└── notebooks                 jupyter notebooks
+    └── html                  html generated from the notebooks
+
+
+Project reference:
+
+- https://github.com/drivendata/cookiecutter-data-science
+- https://towardsdatascience.com/structure-and-automated-workflow-for-a-machine-learning-project-2fa30d661c1e
