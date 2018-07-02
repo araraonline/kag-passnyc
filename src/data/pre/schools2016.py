@@ -34,6 +34,15 @@ def r_to_v(r):
         'Exceeding Target': 4
     }[r]
 
+def g_to_v(g):
+    # grade to value
+    if g == 'PK':
+        return -1
+    elif g == '0K':
+        return 0
+    else:
+        return int (g)
+
 def d_to_f(d):
     # dollar to float
     if isinstance(d, str):
@@ -60,6 +69,8 @@ def clean_df(df):
     # format columns
     df['Community School?'] = df['Community School?'].apply(lambda x: x == 'Yes')
     df['School Income Estimate'] = df['School Income Estimate'].apply(d_to_f)
+    df['Grade Low'] = df['Grade Low'].apply(g_to_v)
+    df['Grade High'] = df['Grade High'].apply(g_to_v)
 
     # format percentage columns
     percentage_cols = [
