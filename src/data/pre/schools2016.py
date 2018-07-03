@@ -60,6 +60,10 @@ def clean_df(df):
     df = df[df['Other Location Code in LCGMS'].isnull()]
     df = df.drop(['Adjusted Grade', 'New?', 'Other Location Code in LCGMS'], axis=1)
 
+    # fix attendance columns
+    df['Student Attendance Rate'] = df['Student Attendance Rate'].apply(lambda x: np.nan if x == '0%' else x)
+    df['Percent of Students Chronically Absent'] = df['Percent of Students Chronically Absent'].apply(lambda x: np.nan if x == '100%' else x)
+
     # drop rows with any NA
     # except when in the column School Income Estimate
     sie = df['School Income Estimate']
