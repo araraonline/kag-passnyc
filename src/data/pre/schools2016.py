@@ -67,7 +67,7 @@ def clean_df(df):
     df['School Income Estimate'] = sie
 
     # format columns
-    df['Community School?'] = df['Community School?'].apply(lambda x: x == 'Yes')
+    df['Community School?'] = df['Community School?'].apply(lambda x: int(x == 'Yes'))
     df['School Income Estimate'] = df['School Income Estimate'].apply(d_to_f)
     df['Grade Low'] = df['Grade Low'].apply(g_to_v)
     df['Grade High'] = df['Grade High'].apply(g_to_v)
