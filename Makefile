@@ -14,8 +14,10 @@ data/flags/download:
 	touch data/flags/download
 
 data/flags/preprocess: data/flags/download \
-					     src/data/pre/schools2016.py
+					     src/data/pre/schools2016.py \
+						 src/data/pre/schools_demographics.py
 	python -m src.data.pre.schools2016 'data/raw/2016 School Explorer.csv' 'data/pre/schools2016.pkl'
+	python -m src.data.pre.schools_demographics 'data/raw/demographicsnapshot201314to201718public_final.xlsx' 'data/pre/schools_demographics.pkl'
 	touch data/flags/preprocess
 
 data/raw/nyt_table.csv: src/data/raw/nyt_table.py
