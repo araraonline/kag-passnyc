@@ -10,7 +10,7 @@ all: data/flags/download \
 
 data/flags/download:
 	kaggle datasets download -d passnyc/data-science-for-good -p data/raw
-	wget -P 'data/raw/' $(ELA_RESULTS_URL) $(MATH_RESULTS_URL) $(CHARTER_RESULTS_URL) $(DEMOGRAPHICS_URL)
+	wget -nc -P 'data/raw/' $(ELA_RESULTS_URL) $(MATH_RESULTS_URL) $(CHARTER_RESULTS_URL) $(DEMOGRAPHICS_URL)
 	touch data/flags/download
 
 data/flags/preprocess: data/flags/download \
