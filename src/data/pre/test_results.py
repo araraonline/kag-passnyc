@@ -23,21 +23,21 @@ COLUMNS = [
 
 def read_ela(in_ela_excel):
     click.echo("Reading ELA excel...")
-    df = pd.read_excel(in_ela_excel, sheet_name='All Students', skiprows=7)
+    df = pd.read_excel(in_ela_excel, sheet_name='All Students', skiprows=7, na_values='s')
     df = df.iloc[:,1:]  # drop first column
     df.columns = COLUMNS
     return df
 
 def read_math(in_math_excel):
     click.echo("Reading Math excel...")
-    df = pd.read_excel(in_math_excel, sheet_name='All Students', skiprows=7)
+    df = pd.read_excel(in_math_excel, sheet_name='All Students', skiprows=7, na_values='s')
     df = df.iloc[:,1:]  # drop first column
     df.columns = COLUMNS
     return df
 
 def read_charters(in_charter_excel):
     click.echo("Reading charter excel...")
-    charters = pd.read_excel(in_charter_excel, sheet_name=['ELA', 'Math'], skiprows=7)
+    charters = pd.read_excel(in_charter_excel, sheet_name=['ELA', 'Math'], skiprows=7, na_values='s')
     charters['ELA'].columns = COLUMNS
     charters['Math'].columns = COLUMNS
     return charters
