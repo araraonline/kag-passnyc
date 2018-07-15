@@ -16,10 +16,12 @@ data/flags/raw: src/data/raw/nyt_table.py
 data/flags/pre: data/flags/raw \
 			     src/data/pre/schools2016.py \
 				 src/data/pre/schools_demographics.py \
-				 src/data/pre/test_results.py
+				 src/data/pre/test_results.py \
+				 src/data/pre/nyt_table.py
 	python -m src.data.pre.schools2016 'data/raw/2016 School Explorer.csv' 'data/pre/schools2016.pkl'
 	python -m src.data.pre.schools_demographics 'data/raw/demographicsnapshot201314to201718public_final.xlsx' 'data/pre/schools_demographics.pkl'
 	python -m src.data.pre.test_results 'data/raw/school-ela-results-2013-2017-public.xlsx' 'data/raw/school-math-results-2013-2017-public.xlsx' 'data/raw/charter-school-results-2013-2017-public.xlsx' 'data/pre/test_results.pkl'
+	python -m src.data.pre.nyt_table 'data/raw/nyt_table.csv' 'data/pre/nyt_table.pkl'
 	touch data/flags/pre
 
 .PHONY: notebooks
