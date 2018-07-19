@@ -6,6 +6,7 @@ CHARTER_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-docu
 
 all: data/flags/raw \
 	 data/flags/pre \
+	 data/flags/interim \
 	 data/flags/process
 
 data/flags/raw: src/data/raw/nyt_table.py
@@ -15,7 +16,7 @@ data/flags/raw: src/data/raw/nyt_table.py
 	touch data/flags/raw
 
 data/flags/pre: data/flags/raw \
-			     src/data/pre/schools2016.py \
+				 src/data/pre/schools2016.py \
 				 src/data/pre/schools_demographics.py \
 				 src/data/pre/test_results.py \
 				 src/data/pre/nyt_table.py
@@ -25,8 +26,15 @@ data/flags/pre: data/flags/raw \
 	python -m src.data.pre.nyt_table 'data/raw/nyt_table.csv' 'data/pre/nyt_table.pkl'
 	touch data/flags/pre
 
+data/flags/interim: data/flags/raw \
+					data/flags/pre \
+					 src/data/interim/zip_to_borough.py
+	python -m src.data.interim.zip_to_borough 'data/interim/zip_to_borough.pkl'
+	touch data/flags/interim
+
 data/flags/process: data/flags/raw \
 					data/flags/pre \
+					data/flags/interim \
 					 src/data/process/schools2017.py
 	python -m src.data.process.schools2017 'data/pre/schools_demographics.pkl' 'data/pre/test_results.pkl' 'data/pre/nyt_table.pkl' 'data/process/schools2017.pkl'
 	touch data/flags/process
