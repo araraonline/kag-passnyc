@@ -3,11 +3,18 @@ ELA_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document
 MATH_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/school-math-results-2013-2017-public.xlsx'
 CHARTER_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/charter-school-results-2013-2017-public.xlsx'
 
+BOROUGHS_KERNEL_URL = 'https://www.kaggleusercontent.com/kf/4643812/eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..2fm9WrpPxTkLeHe2we2Bhg.4ERx0D4arB6hMnagYqXbu9LpFNmRP685Y5gJ9nDpb-9a6xxf7oySr_3LVrh-UwW8aSIPo2VX1sUVLkt1XUc-_TpgtNogNp1PD1nB2kRWbPnGm06pMy8FvRRV060Oy2BT1FxGy2RloW3FuFPSeliu6bfrkBO3cKr8tanHTZNjDY0.BU8mKhlddidc31eeD7COhg/NYC%20Schools%20Boroughs.csv'
 
-all: data/flags/raw \
+
+all: data/flags/external \
+	 data/flags/raw \
 	 data/flags/pre \
 	 data/flags/interim \
 	 data/flags/process
+
+data/flags/external:
+	wget -nc -P 'data/external/' $(BOROUGHS_KERNEL_URL)
+	touch data/flags/external
 
 data/flags/raw: src/data/raw/nyt_table.py
 	kaggle datasets download -d passnyc/data-science-for-good -p data/raw
@@ -15,7 +22,8 @@ data/flags/raw: src/data/raw/nyt_table.py
 	python -m src.data.raw.nyt_table 'data/raw/nyt_table.csv'
 	touch data/flags/raw
 
-data/flags/pre: data/flags/raw \
+data/flags/pre: data/flags/external \
+				data/flags/raw \
 				 src/data/pre/schools2016.py \
 				 src/data/pre/schools_demographics.py \
 				 src/data/pre/test_results.py \
@@ -26,13 +34,15 @@ data/flags/pre: data/flags/raw \
 	python -m src.data.pre.nyt_table 'data/raw/nyt_table.csv' 'data/pre/nyt_table.pkl'
 	touch data/flags/pre
 
-data/flags/interim: data/flags/raw \
+data/flags/interim: data/flags/external \
+					data/flags/raw \
 					data/flags/pre \
 					 src/data/interim/zip_to_borough.py
 	python -m src.data.interim.zip_to_borough 'data/interim/zip_to_borough.pkl'
 	touch data/flags/interim
 
-data/flags/process: data/flags/raw \
+data/flags/process: data/flags/external \
+					data/flags/raw \
 					data/flags/pre \
 					data/flags/interim \
 					 src/data/process/schools2017.py
