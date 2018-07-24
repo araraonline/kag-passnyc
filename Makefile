@@ -35,6 +35,12 @@ data/flags/pre: data/flags/external \
 	python -m src.data.pre.schools_demographics 'data/raw/demographicsnapshot201314to201718public_final.xlsx' 'data/pre/schools_demographics.pkl'
 	python -m src.data.pre.test_results 'data/raw/school-ela-results-2013-2017-public.xlsx' 'data/raw/school-math-results-2013-2017-public.xlsx' 'data/raw/charter-school-results-2013-2017-public.xlsx' 'data/pre/test_results.pkl'
 	python -m src.data.pre.nyt_table 'data/raw/nyt_table.csv' 'data/pre/nyt_table.pkl'
+
+	pdfimages -png -f 22 -l 22 data/external/WorkingPaper_PathwaystoAnEliteEducation.pdf plots
+	rm plots-000.png
+	rm plots-001.png
+	mv plots-002.png data/pre/percent-applying-and-receiving-offers.png
+
 	touch data/flags/pre
 
 data/flags/interim: data/flags/external \
