@@ -5,8 +5,6 @@ CHARTER_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-docu
 
 ARTICLE_URL = 'https://steinhardt.nyu.edu/scmsAdmin/media/users/sg158/PDFs/Pathways_to_elite_education/WorkingPaper_PathwaystoAnEliteEducation.pdf'
 
-BOROUGHS_KERNEL_URL = 'https://www.kaggleusercontent.com/kf/4643812/eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..2fm9WrpPxTkLeHe2we2Bhg.4ERx0D4arB6hMnagYqXbu9LpFNmRP685Y5gJ9nDpb-9a6xxf7oySr_3LVrh-UwW8aSIPo2VX1sUVLkt1XUc-_TpgtNogNp1PD1nB2kRWbPnGm06pMy8FvRRV060Oy2BT1FxGy2RloW3FuFPSeliu6bfrkBO3cKr8tanHTZNjDY0.BU8mKhlddidc31eeD7COhg/NYC%20Schools%20Boroughs.csv'
-
 
 all: data/flags/raw \
 	 data/flags/pre \
@@ -14,10 +12,9 @@ all: data/flags/raw \
 	 data/flags/process
 
 data/flags/raw: src/data/raw/nyt_table.py
-	wget -nc -P 'data/raw/' $(BOROUGHS_KERNEL_URL)
-	wget -nc -P 'data/raw/' $(ARTICLE_URL)
-
 	kaggle datasets download -d passnyc/data-science-for-good -p data/raw
+	kaggle kernels output -k araraonline/retrieve-school-boroughs -p data/raw
+	wget -nc -P 'data/raw/' $(ARTICLE_URL)
 	wget -nc -P 'data/raw/' $(ELA_RESULTS_URL) $(MATH_RESULTS_URL) $(CHARTER_RESULTS_URL) $(DEMOGRAPHICS_URL)
 	python -m src.data.raw.nyt_table 'data/raw/nyt_table.csv'
 	touch data/flags/raw
