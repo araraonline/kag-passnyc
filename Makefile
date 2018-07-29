@@ -9,14 +9,20 @@ ARTICLE_URL = 'https://steinhardt.nyu.edu/scmsAdmin/media/users/sg158/PDFs/Pathw
 all: data/flags/raw \
 	 data/flags/pre \
 	 data/flags/interim \
-	 data/flags/process
+	 data/flags/process \
+	 data/flags/output
 
 data/flags/raw: src/data/raw/nyt_table.py
 	kaggle datasets download -d passnyc/data-science-for-good -p data/raw
 	kaggle kernels output -k araraonline/retrieve-school-boroughs -p data/raw
-	wget -nc -P 'data/raw/' $(ARTICLE_URL)
-	wget -nc -P 'data/raw/' $(ELA_RESULTS_URL) $(MATH_RESULTS_URL) $(CHARTER_RESULTS_URL) $(DEMOGRAPHICS_URL)
+
+	python -m src.util.download $(ARTICLE_URL) 'data/raw/PathwaystoAnEliteEducation.pdf'
+	python -m src.util.download $(DEMOGRAPHICS_URL) 'data/raw/demographics_snapshot_20132017.xlsx'
+	python -m src.util.download $(ELA_RESULTS_URL) 'data/raw/ela_results_20132017.xlsx'
+	python -m src.util.download $(MATH_RESULTS_URL) 'data/raw/math_results_20132017.xlsx'
+	python -m src.util.download $(CHARTER_RESULTS_URL) 'data/raw/charter_results_20132017.xlsx'
 	python -m src.data.raw.nyt_table 'data/raw/nyt_table.csv'
+
 	touch data/flags/raw
 
 data/flags/pre: data/flags/raw \
@@ -25,21 +31,15 @@ data/flags/pre: data/flags/raw \
 				 src/data/pre/test_results.py \
 				 src/data/pre/nyt_table.py
 	python -m src.data.pre.schools2016 'data/raw/2016 School Explorer.csv' 'data/pre/schools2016.pkl'
-	python -m src.data.pre.schools_demographics 'data/raw/demographicsnapshot201314to201718public_final.xlsx' 'data/pre/schools_demographics.pkl'
-	python -m src.data.pre.test_results 'data/raw/school-ela-results-2013-2017-public.xlsx' 'data/raw/school-math-results-2013-2017-public.xlsx' 'data/raw/charter-school-results-2013-2017-public.xlsx' 'data/pre/test_results.pkl'
+	python -m src.data.pre.schools_demographics 'data/raw/demographics_snapshot_20132017.xlsx' 'data/pre/schools_demographics.pkl'
+	python -m src.data.pre.test_results 'data/raw/ela_results_20132017.xlsx' 'data/raw/math_results_20132017.xlsx' 'data/raw/charter_results_20132017.xlsx' 'data/pre/test_results.pkl'
 	python -m src.data.pre.nyt_table 'data/raw/nyt_table.csv' 'data/pre/nyt_table.pkl'
-
-	pdfimages -png -f 22 -l 22 data/raw/WorkingPaper_PathwaystoAnEliteEducation.pdf plots
-	rm plots-000.png
-	rm plots-001.png
-	mv plots-002.png data/pre/percent-applying-and-receiving-offers.png
 
 	touch data/flags/pre
 
 data/flags/interim: data/flags/raw \
-					data/flags/pre \
-					 src/data/interim/zip_to_borough.py
-	python -m src.data.interim.zip_to_borough 'data/interim/zip_to_borough.pkl'
+					data/flags/pre
+
 	touch data/flags/interim
 
 data/flags/process: data/flags/raw \
@@ -47,7 +47,19 @@ data/flags/process: data/flags/raw \
 					data/flags/interim \
 					 src/data/process/schools2017.py
 	python -m src.data.process.schools2017 'data/pre/schools_demographics.pkl' 'data/pre/test_results.pkl' 'data/pre/nyt_table.pkl' 'data/process/schools2017.pkl'
+
 	touch data/flags/process
+
+data/flags/output: data/flags/raw \
+				   data/flags/pre \
+				   data/flags/interim \
+				   data/flags/process
+	pdfimages -png -f 22 -l 22 'data/raw/PathwaystoAnEliteEducation.pdf' plots
+	rm plots-000.png
+	rm plots-001.png
+	mv plots-002.png 'data/output/shsat_offers_by_grade.png'
+
+	touch data/flags/output
 
 .PHONY: notebooks
 notebooks:
