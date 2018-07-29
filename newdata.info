@@ -1,0 +1,47 @@
+# Data info
+
+We will get lots of datasets. This file will contain general information about these datasets...
+
+## 2017-2018 SHSAT Admissions Test Offers By Sending School
+
+- Data exposed on Jul 2018
+- Found at: https://data.cityofnewyork.us/Education/2017-2018-SHSAT-Admissions-Test-Offers-By-Sending-/vsgi-eeb5/
+
+## 2018 DOE Middle School Directory
+
+- Data from Nov 2017
+- Importance: general updated school information (Borough, Latitude, Longitude, communityschool, ...)
+- May be used to designate means of intervation
+- May be used alongside NLP to create features
+- Found at: https://data.cityofnewyork.us/Education/2018-DOE-Middle-School-Directory/6kcb-9g8d
+
+## 2017 - 2018 School Locations
+
+- Data from Sep 2017
+- Importance: contains building code (to link with another datasets)
+- Ignore it now and retrieve if needed
+- Found at: https://data.cityofnewyork.us/Education/2017-2018-School-Locations/p6h4-mpyy
+
+## 2016-2017 Monthly Attendance
+
+- Data from Aug 2017
+- Importance: updated attendance information per class
+- Found at: https://data.cityofnewyork.us/Education/2016-2017-Monthly-Attendance/p3r6-jdne
+
+## 2017 - 2018 Current Year Monthly Attendance
+
+- Data being updated
+- Importance: attendance in the month right before SHSAT
+- Found at: https://data.cityofnewyork.us/Education/2017-2018-Current-Year-Monthly-Attendance/7u63-ib3x
+
+## 2017 - 2018 November2017 Avg Class Size School PTR - Open Data Portal
+
+- Data from Nov 2017
+- Importance: Pupil Teacher Ratio for each school
+- Found at: https://data.cityofnewyork.us/Education/2017-2018-November2017-Avg-Class-Size-School-PTR-O/szn6-bbuk
+
+## School Quality Report - Elementary and Middle Schools (2016-2017)
+
+- Importance: Lots of useful stuff that PASSNYC uses (% ELL, % Disabilities, ENI, Free Lunch, Ethnicity, Chronic Absenteeism)
+- May be used with a feature-selection algorithm to generate insight into what makes a school more prone to take SHSAT (questions)
+- Found at: https://infohub.nyced.org/reports-and-policies/school-quality/school-quality-reports-and-resources
