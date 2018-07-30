@@ -14,7 +14,7 @@ all: data/flags/raw \
 	 data/flags/process \
 	 data/flags/output
 
-data/flags/raw: src/data/raw/nyt_table.py
+data/flags/raw:
 	kaggle datasets download -d passnyc/data-science-for-good -p data/raw
 	kaggle kernels output -k araraonline/retrieve-school-boroughs -p data/raw
 
@@ -25,21 +25,18 @@ data/flags/raw: src/data/raw/nyt_table.py
 	python -m src.util.download $(CHARTER_RESULTS_URL) 'data/raw/charter_results_20132017.xlsx'
 	python -m src.util.download $(MIDDLE_SCHOOL_DIRECTORY_URL) 'data/raw/middle_school_directory.csv'
 	python -m src.util.download $(SHSAT_TABLE_URL) 'data/raw/shsat_table.csv'
-	python -m src.data.raw.nyt_table 'data/raw/nyt_table.csv'
 
 	touch data/flags/raw
 
 data/flags/pre: data/flags/raw \
 				 src/data/pre/schools2016.py \
 				 src/data/pre/test_results.py \
-				 src/data/pre/nyt_table.py \
 				 src/data/pre/school_demographics_20162017.py \
 				 src/data/pre/shsat_table.py
 	python -m src.data.pre.schools2016 'data/raw/2016 School Explorer.csv' 'data/pre/schools2016.pkl'
 	python -m src.data.pre.middle_school_base 'data/raw/middle_school_directory.csv' 'data/pre/middle_school_base.pkl'
 	python -m src.data.pre.shsat_table 'data/raw/shsat_table.csv' 'data/pre/shsat_table.pkl'
 	python -m src.data.pre.school_demographics_20162017 'data/raw/quality_report_20162017.xlsx' 'data/pre/school_demographics_20162017.pkl'
-	python -m src.data.pre.nyt_table 'data/raw/nyt_table.csv' 'data/pre/nyt_table.pkl'
 	python -m src.data.pre.test_results 'data/raw/ela_results_20132017.xlsx' 'data/raw/math_results_20132017.xlsx' 'data/raw/charter_results_20132017.xlsx' 'data/pre/test_results.pkl'
 
 	touch data/flags/pre
