@@ -1,4 +1,5 @@
 DEMOGRAPHICS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/demographicsnapshot201314to201718public_final.xlsx'
+QUALITY_REPORT_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/2016-17-elementary-middle-school-quality-report.xlsx?sfvrsn=8128a743_4'
 ELA_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/school-ela-results-2013-2017-public.xlsx'
 MATH_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/school-math-results-2013-2017-public.xlsx'
 CHARTER_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/charter-school-results-2013-2017-public.xlsx'
@@ -18,6 +19,7 @@ data/flags/raw: src/data/raw/nyt_table.py
 
 	python -m src.util.download $(ARTICLE_URL) 'data/raw/PathwaystoAnEliteEducation.pdf'
 	python -m src.util.download $(DEMOGRAPHICS_URL) 'data/raw/demographics_snapshot_20132017.xlsx'
+	python -m src.util.download $(QUALITY_REPORT_URL) 'data/raw/quality_report_20162017.xlsx'
 	python -m src.util.download $(ELA_RESULTS_URL) 'data/raw/ela_results_20132017.xlsx'
 	python -m src.util.download $(MATH_RESULTS_URL) 'data/raw/math_results_20132017.xlsx'
 	python -m src.util.download $(CHARTER_RESULTS_URL) 'data/raw/charter_results_20132017.xlsx'
