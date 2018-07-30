@@ -28,8 +28,10 @@ data/flags/raw: src/data/raw/nyt_table.py
 data/flags/pre: data/flags/raw \
 				 src/data/pre/schools2016.py \
 				 src/data/pre/test_results.py \
-				 src/data/pre/nyt_table.py
+				 src/data/pre/nyt_table.py \
+				 src/data/pre/school_demographics_20162017.py
 	python -m src.data.pre.schools2016 'data/raw/2016 School Explorer.csv' 'data/pre/schools2016.pkl'
+	python -m src.data.pre.school_demographics_20162017 'data/raw/quality_report_20162017.xlsx' 'data/pre/school_demographics_20162017.pkl'
 	python -m src.data.pre.test_results 'data/raw/ela_results_20132017.xlsx' 'data/raw/math_results_20132017.xlsx' 'data/raw/charter_results_20132017.xlsx' 'data/pre/test_results.pkl'
 	python -m src.data.pre.nyt_table 'data/raw/nyt_table.csv' 'data/pre/nyt_table.pkl'
 
