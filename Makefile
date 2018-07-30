@@ -2,6 +2,7 @@ QUALITY_REPORT_URL = 'http://infohub.nyced.org/docs/default-source/default-docum
 ELA_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/school-ela-results-2013-2017-public.xlsx'
 MATH_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/school-math-results-2013-2017-public.xlsx'
 CHARTER_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/charter-school-results-2013-2017-public.xlsx'
+MIDDLE_SCHOOL_DIRECTORY_URL = 'https://data.cityofnewyork.us/api/views/6kcb-9g8d/rows.csv?accessType=DOWNLOAD'
 
 ARTICLE_URL = 'https://steinhardt.nyu.edu/scmsAdmin/media/users/sg158/PDFs/Pathways_to_elite_education/WorkingPaper_PathwaystoAnEliteEducation.pdf'
 
@@ -21,6 +22,7 @@ data/flags/raw: src/data/raw/nyt_table.py
 	python -m src.util.download $(ELA_RESULTS_URL) 'data/raw/ela_results_20132017.xlsx'
 	python -m src.util.download $(MATH_RESULTS_URL) 'data/raw/math_results_20132017.xlsx'
 	python -m src.util.download $(CHARTER_RESULTS_URL) 'data/raw/charter_results_20132017.xlsx'
+	python -m src.util.download $(MIDDLE_SCHOOL_DIRECTORY_URL) 'data/raw/middle_school_directory.csv'
 	python -m src.data.raw.nyt_table 'data/raw/nyt_table.csv'
 
 	touch data/flags/raw
