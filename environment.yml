@@ -139,6 +139,7 @@ dependencies:
     - lesscpy==0.13.0
     - nbdime==1.0.1
     - ply==3.11
+    - shapely==1.6.4.post2
     - smmap2==2.0.4
     - tqdm==4.23.4
 prefix: /home/andre/miniconda3/envs/passnyc
