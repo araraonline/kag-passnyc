@@ -13,6 +13,7 @@ We will get lots of datasets. This file will contain general information about t
 - Importance: general updated school information (Borough, Latitude, Longitude, communityschool, ...)
 - May be used to designate means of intervation
 - May be used alongside NLP to create features
+- *missing information about charter schools*
 - Found at: https://data.cityofnewyork.us/Education/2018-DOE-Middle-School-Directory/6kcb-9g8d
 
 ## 2017 - 2018 School Locations
