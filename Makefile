@@ -57,7 +57,7 @@ data/flags/process: data/flags/raw \
 					data/flags/pre \
 					data/flags/interim \
 					 src/data/process/schools2017.py
-	python -m src.data.process.schools2017 'data/pre/schools_demographics.pkl' 'data/pre/test_results.pkl' 'data/pre/nyt_table.pkl' 'data/process/schools2017.pkl'
+	python -m src.data.process.schools2017 'data/pre/school_locations.pkl' 'data/pre/test_results.pkl' 'data/pre/shsat_table.pkl' 'data/pre/school_demographics_20162017.pkl' 'data/process/schools2017.pkl'
 
 	touch data/flags/process
 

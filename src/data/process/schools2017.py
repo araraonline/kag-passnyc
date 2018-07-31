@@ -2,167 +2,93 @@ import click
 import pandas as pd
 
 
-# all read functions prepare the DataFrame for merging
-
-def read_basic(in_basic):
-    columns = [
-        'DBN',
-        'School Name',
-        'Grade 8',
-        '% Female',
-        '% Male',
-        '% Asian',
-        '% Black',
-        '% Hispanic',
-        '% Multiple Race Categories Not Represented',
-        '% White',
-        '% Students with Disabilities',
-        '% English Language Learners',
-        '% Poverty',
-        'Economic Need Index'
-    ]
-    basic = pd.read_pickle(in_basic)
-    basic = basic[(basic['Year'] == '2017-18') &
-                  (basic['Grade 8'] > 0)]
-    basic = basic[columns]
-    return basic
-
-def read_results(in_results):
-    columns = [
-        'DBN',
-        'Charter School',
-        'Number Tested - ELA',
+def preprocess_tests(tests):
+    tests = tests.reset_index()
+    tests = tests[(tests['Grade'] == 7) &
+                  (tests['Year'] == 2017)]
+    tests = tests.set_index('DBN')
+    tests = tests[[
+        'Charter School?',
         'Mean Scale Score - ELA',
-        '# Level 1 - ELA',
-        '% Level 1 - ELA',
-        '# Level 2 - ELA',
         '% Level 2 - ELA',
-        '# Level 3 - ELA',
         '% Level 3 - ELA',
-        '# Level 4 - ELA',
         '% Level 4 - ELA',
-        '# Level 3+4 - ELA',
-        '% Level 3+4 - ELA',
-        'Number Tested - Math',
         'Mean Scale Score - Math',
-        '# Level 1 - Math',
-        '% Level 1 - Math',
-        '# Level 2 - Math',
         '% Level 2 - Math',
-        '# Level 3 - Math',
         '% Level 3 - Math',
-        '# Level 4 - Math',
         '% Level 4 - Math',
-        '# Level 3+4 - Math',
-        '% Level 3+4 - Math'
-    ]
-    results = pd.read_pickle(in_results)
-    results = results[(results['Grade'] == 7) &
-                      (results['Year'] == 2017)]
-    results = results[columns]
-    return results
+    ]]
 
-def read_applicants(in_applicants):
-    columns = [
-        'DBN',
-        'borough',
-        'testers',
-    ]
-    applicants = pd.read_pickle(in_applicants)
-    applicants = applicants[columns]
-    return applicants
+    return tests
 
-def merge_data(basic, results, applicants):
-    # merging
-    d1 = basic.set_index('DBN')
-    d2 = results.set_index('DBN')
-    d3 = applicants.set_index('DBN')
 
-    df = d1.join(d2, how='inner').join(d3, how='inner')
-    df.shape
-
-    # renaming columns
-    new_names = {
-        'borough': 'Borough',
-        'testers': '# SHSAT Testers',
-        'Grade 8': '# Students Grade 8'
-    }
-    df = df.rename(columns=new_names)
-
-    # reordering columns
-    columns = [
+def join_data(locations, tests, shsat, demographics):
+    joined = shsat.join(locations).join(tests).join(demographics)
+    joined['Percent Other'] = 1 - joined.loc[:, 'Percent Asian':'Percent White'].sum(axis=1, skipna=False)
+    joined = joined[[
         'School Name',
+        'Charter School?',
         'Borough',
-        'Charter School',
-        'Economic Need Index',
-        '% Female',
-        '% Male',
-        '% Asian',
-        '% Black',
-        '% Hispanic',
-        '% Multiple Race Categories Not Represented',
-        '% White',
-        '% Students with Disabilities',
-        '% English Language Learners',
-        '% Poverty',
-        'Number Tested - ELA',
-        'Mean Scale Score - ELA',
-        '# Level 1 - ELA',
-        '% Level 1 - ELA',
-        '# Level 2 - ELA',
-        '% Level 2 - ELA',
-        '# Level 3 - ELA',
-        '% Level 3 - ELA',
-        '# Level 4 - ELA',
-        '% Level 4 - ELA',
-        '# Level 3+4 - ELA',
-        '% Level 3+4 - ELA',
-        'Number Tested - Math',
-        'Mean Scale Score - Math',
-        '# Level 1 - Math',
-        '% Level 1 - Math',
-        '# Level 2 - Math',
-        '% Level 2 - Math',
-        '# Level 3 - Math',
-        '% Level 3 - Math',
-        '# Level 4 - Math',
-        '% Level 4 - Math',
-        '# Level 3+4 - Math',
-        '% Level 3+4 - Math',
-        '# Students Grade 8',
-        '# SHSAT Testers'
-    ]
-    df = df[columns]
+        'Latitude',
+        'Longitude',
 
-    return df
+        'Percent Asian',
+        'Percent Black',
+        'Percent Hispanic',
+        'Percent White',
+        'Percent Other',
+
+        'Percent English Language Learners',
+        'Percent Students with Disabilities',
+        'Percent of Students Chronically Absent',
+        'Economic Need Index',
+
+        'Mean Scale Score - ELA',
+        '% Level 2 - ELA',
+        '% Level 3 - ELA',
+        '% Level 4 - ELA',
+        'Mean Scale Score - Math',
+        '% Level 2 - Math',
+        '% Level 3 - Math',
+        '% Level 4 - Math',
+
+        '# Students in HS Admissions',
+        '# SHSAT Testers',
+        '# SHSAT Offers',
+        '% SHSAT Testers',
+        '% SHSAT Offers',
+    ]]
+    return joined
 
 
 @click.command()
-@click.argument('in-basic', type=click.Path(exists=True))
-@click.argument('in-results', type=click.Path(exists=True))
-@click.argument('in-applicants', type=click.Path(exists=True))
-@click.argument('out-merged', type=click.Path(writable=True))
-def cli(in_basic, in_results, in_applicants, out_merged):
-    """Merges all schools data to 2017
+@click.argument('in-locations', type=click.Path(exists=True))
+@click.argument('in-tests', type=click.Path(exists=True))
+@click.argument('in-shsat', type=click.Path(exists=True))
+@click.argument('in-demographics', type=click.Path(exists=True))
+@click.argument('out-joined', type=click.Path(writable=True))
+def CLI(in_locations, in_tests, in_shsat, in_demographics, out_joined):
+    """Join information about schools and students that took the SHSAT in 2017
 
     \b
     Inputs:
-        basic (pkl): The basic schools demographics file.
-        results (pkl): The NYS test results files.
-        applicants (pkl): The SHSAT applicants table from the NYT.
+        locations (pkl): School Locations (2017-2018)
+        tests (pkl): NYS test results (2013-2017)
+        shsat (pkl): SHSAT Testers and Offers (2017-18)
+        demographics (pkl): Demographics from the School Quality Report (2016-17)
 
     \b
     Outputs:
-        merged (pkl): A DataFrame containing all merged data for the SHSAT
-            applicants of 2017.
+        joined (pkl): The resulting dataframe
     """
-    basic = read_basic(in_basic)
-    results = read_results(in_results)
-    applicants = read_applicants(in_applicants)
+    locations = pd.read_pickle(in_locations)
+    tests = preprocess_tests(pd.read_pickle(in_tests))
+    shsat = pd.read_pickle(in_shsat)
+    demographics = pd.read_pickle(in_demographics)
 
-    merged = merge_data(basic, results, applicants)    
-    merged.to_pickle(out_merged)
+    joined = join_data(locations, tests, shsat, demographics)
+    joined.to_pickle(out_joined)
 
 
 if __name__ == '__main__':
-    cli()
+    CLI()
