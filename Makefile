@@ -1,7 +1,8 @@
+ELA_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/school-ela-results-2013-2017-public.xlsx?sfvrsn=1434547_2'
+MATH_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/school-math-results-2013-2017-public.xlsx?sfvrsn=6bc91980_2'
+CHARTER_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/charter-school-results-2013-2017-public.xlsx?sfvrsn=4988028b_2'
 QUALITY_REPORT_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/2016-17-elementary-middle-school-quality-report.xlsx?sfvrsn=8128a743_4'
-ELA_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/school-ela-results-2013-2017-public.xlsx'
-MATH_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/school-math-results-2013-2017-public.xlsx'
-CHARTER_RESULTS_URL = 'http://infohub.nyced.org/docs/default-source/default-document-library/charter-school-results-2013-2017-public.xlsx'
+
 MIDDLE_SCHOOL_DIRECTORY_URL = 'https://data.cityofnewyork.us/api/views/6kcb-9g8d/rows.csv?accessType=DOWNLOAD'
 SHSAT_TABLE_URL = 'https://data.cityofnewyork.us/api/views/vsgi-eeb5/rows.csv?accessType=DOWNLOAD'
 SCHOOL_LOCATIONS_URL = 'https://data.cityofnewyork.us/api/views/p6h4-mpyy/rows.csv?accessType=DOWNLOAD'
