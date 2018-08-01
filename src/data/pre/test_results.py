@@ -45,30 +45,48 @@ def read_charters(in_charter_excel):
 def read_all(in_ela_excel, in_math_excel, in_charter_excel):
     ela = read_ela(in_ela_excel)
     math = read_math(in_math_excel)
+
     charters = read_charters(in_charter_excel)
+    c_ela = charters['ELA']
+    c_math = charters['Math']
 
-    click.echo("Joining test results...")
+    # remove unused columns
+    ela = ela.drop(['School Name', 'Category'], axis=1)
+    math = math.drop(['School Name', 'Category'], axis=1)
+    c_ela = c_ela.drop(['School Name', 'Category'], axis=1)
+    c_math = c_math.drop(['School Name', 'Category'], axis=1)
 
-    # charter file is divided in 2 sheets
-    charter_ela = charters['ELA']
-    charter_math = charters['Math']
+    # create charter school flag
+    ncharter_dbn = set(ela['DBN']) | set(math['DBN'])
+    charter_flags1 = pd.Series(0, index=ncharter_dbn)
 
-    # add charter school flag before concatenation
-    ela['Charter School'] = 0
-    charter_ela['Charter School'] = 1
+    charter_dbn = set(c_ela['DBN']) | set(c_math['DBN'])
+    charter_flags2 = pd.Series(1, index=charter_dbn)
 
-    # concat usual + charter
-    ela_all = pd.concat([ela, charter_ela], ignore_index=True)
-    math_all = pd.concat([math, charter_math], ignore_index=True)
+    charter_flags = pd.concat([charter_flags1, charter_flags2])
+    charter_flags.name = 'Charter School?'
+    charter_flags.index.name = 'DBN'
 
-    # join ELA + Math
-    d1 = ela_all.drop('Category', axis=1)
-    d2 = math_all.drop(['Category', 'School Name'], axis=1)  # School Name already present in ELA dataframe
-    # Charter School flag present in ELA dataframe
-    d2 = d2.set_index(['DBN', 'Grade', 'Year'])
-    merged = d1.join(d2, how='inner', on=['DBN', 'Grade', 'Year'], lsuffix=" - ELA", rsuffix=" - Math")
+    # create empty DataFrame with correct index
+    DBN = sorted(charter_flags.index)
+    Grade = [3, 4, 5, 6, 7, 8, 'All Grades']
+    Year = [2013, 2014, 2015, 2016, 2017]
+    index = pd.MultiIndex.from_product([DBN, Grade, Year], names=['DBN', 'Grade', 'Year'])
+    base_df = pd.DataFrame(index=index)
 
-    return merged
+    # concatenate grades
+    f_ela = pd.concat([ela, c_ela]).set_index(['DBN', 'Grade', 'Year'])
+    f_math = pd.concat([math, c_math]).set_index(['DBN', 'Grade', 'Year'])
+
+    # join everything
+    grades = f_ela.join(f_math, how='outer', lsuffix=' - ELA', rsuffix=' - Math')
+    everything = base_df.join(charter_flags).join(grades)
+
+    # fix values for missing rows
+    everything.loc[everything['Number Tested - ELA'].isnull(), 'Number Tested - ELA'] = 0
+    everything.loc[everything['Number Tested - Math'].isnull(), 'Number Tested - Math'] = 0
+
+    return everything
 
 
 @click.command()
