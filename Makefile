@@ -65,6 +65,8 @@ data/flags/output: data/flags/raw \
 				   data/flags/pre \
 				   data/flags/interim \
 				   data/flags/process
+	python -m src.util.pickle_to_csv 'data/pre/test_results.pkl' 'data/output/ela_math_nys_results.csv'
+
 	pdfimages -png -f 22 -l 22 'data/raw/PathwaystoAnEliteEducation.pdf' plots
 	rm plots-000.png
 	rm plots-001.png
