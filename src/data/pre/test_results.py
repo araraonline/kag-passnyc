@@ -1,4 +1,5 @@
 import click
+import numpy as np
 import pandas as pd
 
 COLUMNS = [
@@ -20,6 +21,19 @@ COLUMNS = [
     '# Level 3+4',
     '% Level 3+4'
 ]
+
+def standardize(values):
+    x = np.array(values)
+
+    # extract non-na values
+    x = x[~np.isnan(x)]
+    assert len(x) > 0
+
+    # compute statistics
+    mean = x.mean()
+    std = x.std()
+
+    return (values - mean) / std
 
 def read_ela(in_ela_excel):
     click.echo("Reading ELA excel...")
@@ -88,6 +102,24 @@ def read_all(in_ela_excel, in_math_excel, in_charter_excel):
 
     return everything
 
+def preprocess(df):
+    # convert percentages to the (0, 1) range
+    bad_pct_c = [
+        '% Level 2 - ELA',
+        '% Level 3 - ELA',
+        '% Level 4 - ELA',
+        '% Level 2 - Math',
+        '% Level 3 - Math',
+        '% Level 4 - Math',
+    ]
+    df.loc[:, bad_pct_c] = df.loc[:, bad_pct_c] / 100.0
+
+    # standardize score columns (algorithm stability)
+    score_c = ['Mean Scale Score - ELA', 'Mean Scale Score - Math']
+    df.loc[:, score_c] = df.loc[:, score_c].apply(standardize)
+
+    return df
+
 
 @click.command()
 @click.argument('in-ela-excel', type=click.Path(exists=True))
@@ -112,6 +144,7 @@ def cli(in_ela_excel, in_math_excel, in_charter_excel, out_dataframe):
         dataframe (pkl): The place to dump the result
     """
     df = read_all(in_ela_excel, in_math_excel, in_charter_excel)
+    df = preprocess(df)
 
     click.echo("Saving joined results...")
     df.to_pickle(out_dataframe)

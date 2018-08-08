@@ -6,6 +6,3 @@ data/**
 !data/**/.gitkeep
 !data/keep/
 !data/keep/*
-
-notebooks/html/*
-!notebooks/html/.gitkeep
